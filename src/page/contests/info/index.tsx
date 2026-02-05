@@ -3,6 +3,7 @@ import axiosInstance from "../../../api/axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Header } from "../../../components/header";
+import { toast } from "react-toastify";
 
 // ============================
 // 상수 및 이미지 매핑
@@ -37,9 +38,24 @@ interface ContestDetail {
 export const ContestDetailPage = () => {
   const { contestCode } = useParams<{ contestCode: string }>();
   const [contestDetails, setContestDetails] = useState<ContestDetail | null>(
-    null
+    null,
   );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!contestCode) return;
+
+    // 문제 풀이 관련 로컬스토리지 정리
+    Object.keys(localStorage).forEach((key) => {
+      if (
+        key.startsWith("dukkaebi_codes_") ||
+        key.startsWith("dukkaebi_timeSpent_") ||
+        key.startsWith("dukkaebi_submitted_")
+      ) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, [contestCode]);
 
   // 문제 진행도 계산 함수
   const calculateProgress = (): number => {
@@ -49,7 +65,7 @@ export const ContestDetailPage = () => {
 
     const solvedCount = contestDetails.problems.filter(
       (problem) =>
-        problem.solvedResult === "SOLVED" || problem.solvedResult === "FAILED"
+        problem.solvedResult === "SOLVED" || problem.solvedResult === "FAILED",
     ).length;
 
     return Math.round((solvedCount / contestDetails.problems.length) * 100);
@@ -76,10 +92,20 @@ export const ContestDetailPage = () => {
       return;
     }
 
-    const proceedToFirstProblem = () => {
-      const firstProblemId = contestDetails.problems[0]?.problemId;
-      if (!firstProblemId) return;
-      navigate(`/contests/${contestCode}/solve/${firstProblemId}`);
+    const proceedToFirstNotSolvedProblem = () => {
+      // NOT_SOLVED인 첫 문제 찾기
+      const firstNotSolved = contestDetails.problems.find(
+        (p) => p.solvedResult === "NOT_SOLVED",
+      );
+
+      // 모든 문제를 이미 풀었다면 첫 문제로 이동
+      const targetProblemId = firstNotSolved
+        ? firstNotSolved.problemId
+        : contestDetails.problems[0]?.problemId;
+
+      if (!targetProblemId) return;
+
+      navigate(`/contests/${contestCode}/solve/${targetProblemId}`);
     };
 
     if (contestDetails.status === "JOINABLE") {
@@ -91,22 +117,28 @@ export const ContestDetailPage = () => {
           params: { code: input },
         })
         .then(() => {
-          proceedToFirstProblem();
+          toast.success("대회 참가에 성공했습니다.");
+          // 대회 정보를 다시 불러와서 상태를 JOINED로 업데이트
+          axiosInstance
+            .get<ContestDetail>(`/contest/${contestCode}`)
+            .then((response) => {
+              setContestDetails(response.data);
+            });
         })
         .catch(() => {
-          alert("대회 코드가 일치하지 않거나 참여할 수 없습니다.");
+          toast.error("대회 코드가 일치하지 않거나 참여할 수 없습니다.");
         });
       return;
     }
 
-    proceedToFirstProblem();
+    proceedToFirstNotSolvedProblem();
   };
 
   useEffect(() => {
     const fetchContestDetails = async () => {
       try {
         const response = await axiosInstance.get<ContestDetail>(
-          `/contest/${contestCode}`
+          `/contest/${contestCode}`,
         );
         setContestDetails(response.data);
 
@@ -118,7 +150,7 @@ export const ContestDetailPage = () => {
           // 해당 대회와 관련된 시간 설정 보관소 삭제
           localStorage.removeItem(`dukkaebi_timeSpent_${contestCode}`);
           console.log(
-            `Contest ${contestCode} 관련 로컬 데이터가 초기화되었습니다.`
+            `Contest ${contestCode} 관련 로컬 데이터가 초기화되었습니다.`,
           );
         }
       } catch (error) {

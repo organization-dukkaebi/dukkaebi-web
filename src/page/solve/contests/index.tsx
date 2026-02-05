@@ -1,6 +1,3 @@
-//파일 경로
-
-
 import { useState, useRef, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,7 +26,9 @@ export default function SolvePage() {
   const navigate = useNavigate();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">("result");
+  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">(
+    "result",
+  );
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -55,13 +54,23 @@ export default function SolvePage() {
     problemSections,
   } = useProblem({ problemId });
 
-  const { problems: courseProblems, timeLeft, getTimeSpent } = useContest({
+  const {
+    problems: courseProblems,
+    timeLeft,
+    getTimeSpent,
+  } = useContest({
     contestCode,
     problemId,
   });
 
-  const { isSubmitting, isTesting, terminalOutput, gradingDetails, submitCode, testCode } =
-    useGrading({ problemId });
+  const {
+    isSubmitting,
+    isTesting,
+    terminalOutput,
+    gradingDetails,
+    submitCode,
+    testCode,
+  } = useGrading({ problemId });
 
   const {
     containerRef,
@@ -105,7 +114,7 @@ export default function SolvePage() {
   const handleNextProblem = () => {
     saveToLocalStorage();
     const currentIndex = courseProblems.findIndex(
-      (p) => String(p.problemId) === String(problemId)
+      (p) => String(p.problemId) === String(problemId),
     );
     const isLastProblem = currentIndex === courseProblems.length - 1;
 
@@ -128,7 +137,12 @@ export default function SolvePage() {
 
   return (
     <Style.SolveContainer ref={containerRef}>
-      <ToastContainer position="top-right" theme="dark" newestOnTop closeOnClick />
+      <ToastContainer
+        position="top-right"
+        theme="dark"
+        newestOnTop
+        closeOnClick
+      />
 
       <SolveHeader
         problemName={problem?.name}
@@ -140,9 +154,15 @@ export default function SolvePage() {
         rightContent={
           <>
             {timeLeft && (
-              <span style={{ color: "#9fb1bc", marginRight: 12 }}>{timeLeft}</span>
+              <span style={{ color: "#9fb1bc", marginRight: 12 }}>
+                {timeLeft}
+              </span>
             )}
-            <Style.MenuButton ref={menuButtonRef} type="button" onClick={toggleSidebar}>
+            <Style.MenuButton
+              ref={menuButtonRef}
+              type="button"
+              onClick={toggleSidebar}
+            >
               ☰
             </Style.MenuButton>
           </>
@@ -174,18 +194,30 @@ export default function SolvePage() {
             terminalOutput={terminalOutput}
             gradingDetails={gradingDetails}
             actionButtons={
-              <div style={{ display: "flex", gap: "12px", marginRight: isSidebarOpen ? 268 : 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "12px",
+                  marginRight: isSidebarOpen ? 268 : 0,
+                }}
+              >
                 <Style.SubmitButton
                   onClick={handleEndTest}
                   disabled={!problemId}
-                  style={{ backgroundColor: "#35454E", border: "1px solid #495D68" }}
+                  style={{
+                    backgroundColor: "#35454E",
+                    border: "1px solid #495D68",
+                  }}
                 >
                   끝내기
                 </Style.SubmitButton>
                 <Style.SubmitButton
                   onClick={handleTestCode}
                   disabled={!problemId || isTesting}
-                  style={{ backgroundColor: "#3E5C7A", border: "1px solid #4A6B8F" }}
+                  style={{
+                    backgroundColor: "#3E5C7A",
+                    border: "1px solid #4A6B8F",
+                  }}
                 >
                   {isTesting ? "테스트 중..." : "테스트"}
                 </Style.SubmitButton>
@@ -200,10 +232,14 @@ export default function SolvePage() {
                   disabled={
                     !problemId ||
                     courseProblems.findIndex(
-                      (p) => String(p.problemId) === String(problemId ?? "")
-                    ) === courseProblems.length - 1
+                      (p) => String(p.problemId) === String(problemId ?? ""),
+                    ) ===
+                      courseProblems.length - 1
                   }
-                  style={{ backgroundColor: "#35454E", border: "1px solid #495D68" }}
+                  style={{
+                    backgroundColor: "#35454E",
+                    border: "1px solid #495D68",
+                  }}
                 >
                   다음 문제
                 </Style.SubmitButton>

@@ -26,7 +26,9 @@ export default function SolvePage() {
   const navigate = useNavigate();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">("result");
+  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">(
+    "result",
+  );
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const {
@@ -38,8 +40,14 @@ export default function SolvePage() {
     languageOptions,
   } = useSolveForm({ storageKey: `course_${courseId}`, problemId });
 
-  const { problem, status: problemStatus, error: problemError, sampleInput, sampleOutput, problemSections } =
-    useProblem({ problemId });
+  const {
+    problem,
+    status: problemStatus,
+    error: problemError,
+    sampleInput,
+    sampleOutput,
+    problemSections,
+  } = useProblem({ problemId });
 
   const { problems: courseProblems } = useCourse({ courseId });
 
@@ -82,7 +90,9 @@ export default function SolvePage() {
         }
       />
 
-      <Style.PageContent style={{ paddingRight: isSidebarOpen ? "250px" : "0" }}>
+      <Style.PageContent
+        style={{ paddingRight: isSidebarOpen ? "250px" : "0" }}
+      >
         <ProblemDescription
           status={problemStatus}
           error={problemError}
