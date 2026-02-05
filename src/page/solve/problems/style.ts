@@ -10,7 +10,10 @@ export const SolveContainer = styled.div`
   padding: 0;
   background: #263238;
   color: white;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -501,4 +504,83 @@ export const ChatSendButton = styled.button<{ $active?: boolean }>`
   font-size: 14px;
   line-height: 1;
   padding: 0;
+`;
+
+export const MenuButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+`;
+
+export const RightSidebar = styled.aside`
+  position: fixed;
+  right: 0;
+  top: 40px;
+  width: 250px;
+  height: calc(100% - 40px);
+  background: #35454e;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  flex-shrink: 0;
+`;
+
+export const SidebarHeader = styled.div`
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #e8eaed;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+`;
+
+export const SidebarList = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+`;
+
+export const SidebarItem = styled.button<{ $active?: boolean }>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: ${({ $active }) => ($active ? "#2d3d48" : "transparent")};
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e8eaed;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    background: ${({ $active }) =>
+      $active ? "#2a3943" : "rgba(255, 255, 255, 0.06)"};
+  }
+`;
+
+export const SidebarItemIndex = styled.span`
+  color: #9fb1bc;
+  font-size: 12px;
+  min-width: 32px;
+`;
+
+export const SidebarItemTitle = styled.span`
+  color: #e8eaed;
+  font-size: 14px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const ThinDivider = styled.div`
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 `;

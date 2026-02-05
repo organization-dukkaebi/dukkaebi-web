@@ -5,7 +5,11 @@ export const PageWrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
   background: white;
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
     sans-serif;
   color: #1d1d1d;
 `;
@@ -238,10 +242,10 @@ export const HeatmapCell = styled.div<{ $intensity: string }>`
     $intensity === "100"
       ? "#00B4B7"
       : $intensity === "60"
-      ? "rgba(0, 180, 183, 0.6)"
-      : $intensity === "20"
-      ? "rgba(0, 180, 183, 0.2)"
-      : "#E0E0E0"};
+        ? "rgba(0, 180, 183, 0.6)"
+        : $intensity === "20"
+          ? "rgba(0, 180, 183, 0.2)"
+          : "#E0E0E0"};
   position: relative;
   cursor: pointer;
 
@@ -259,7 +263,9 @@ export const HeatmapCell = styled.div<{ $intensity: string }>`
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.15s ease, transform 0.15s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
     z-index: 5;
   }
 

@@ -1,35 +1,16 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Style from "./style";
-import {
-  useSolveForm,
-  useProblem,
-  useCourse,
-  useGrading,
-  useResizePanel,
-} from "../../../hooks/solve";
-import {
-  SolveHeader,
-  ProblemDescription,
-  CodeEditor,
-  ResultPanel,
-  ProblemSidebar,
-} from "../../../components/solve";
+import { useSolveForm, useProblem, useGrading, useResizePanel } from "../../../hooks/solve";
+import { SolveHeader, ProblemDescription, CodeEditor, ResultPanel } from "../../../components/solve";
 
 export default function SolvePage() {
-  const { courseId, problemId } = useParams<{
-    courseId?: string;
-    problemId?: string;
-  }>();
+  const { problemId } = useParams<{ problemId?: string }>();
   const navigate = useNavigate();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">(
-    "result",
-  );
-  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [activeResultTab, setActiveResultTab] = useState<"result" | "tests">("result");
 
   const {
     control,
@@ -38,7 +19,7 @@ export default function SolvePage() {
     handleLanguageChange,
     getValues,
     languageOptions,
-  } = useSolveForm({ storageKey: `course_${courseId}`, problemId });
+  } = useSolveForm({ problemId });
 
   const {
     problem,
@@ -49,8 +30,6 @@ export default function SolvePage() {
     problemSections,
   } = useProblem({ problemId });
 
-  const { problems: courseProblems } = useCourse({ courseId });
-
   const { isSubmitting, terminalOutput, gradingDetails, submitCode } =
     useGrading({ problemId });
 
@@ -60,21 +39,18 @@ export default function SolvePage() {
     isResizing,
     terminalHeight,
     startResizing,
-  } = useResizePanel({ isSidebarOpen });
+  } = useResizePanel({});
 
   const handleSubmitCode = () => {
     const { code, language } = getValues();
     submitCode(code, language);
   };
 
-  const toggleSidebar = () => setIsSidebarOpen((v) => !v);
-  const handleExitSolvePage = () => navigate(`/courses/${courseId}`);
-  const handleSidebarItemClick = (pid: number) =>
-    navigate(`/courses/${courseId}/solve/${pid}`);
+  const handleExitSolvePage = () => navigate("/problems");
 
   return (
     <Style.SolveContainer ref={containerRef}>
-      <ToastContainer position="top-right" theme="dark" autoClose={2500} />
+      <ToastContainer position="top-right" theme="dark" newestOnTop closeOnClick />
 
       <SolveHeader
         problemName={problem?.name}
@@ -83,16 +59,9 @@ export default function SolvePage() {
         control={control}
         onLanguageChange={handleLanguageChange}
         onBack={handleExitSolvePage}
-        rightContent={
-          <Style.MenuButton ref={menuButtonRef} onClick={toggleSidebar}>
-            ☰
-          </Style.MenuButton>
-        }
       />
 
-      <Style.PageContent
-        style={{ paddingRight: isSidebarOpen ? "250px" : "0" }}
-      >
+      <Style.PageContent>
         <ProblemDescription
           status={problemStatus}
           error={problemError}
@@ -126,14 +95,6 @@ export default function SolvePage() {
             }
           />
         </Style.RightPanel>
-
-        {isSidebarOpen && (
-          <ProblemSidebar
-            problems={courseProblems}
-            currentProblemId={problemId}
-            onProblemClick={handleSidebarItemClick}
-          />
-        )}
       </Style.PageContent>
     </Style.SolveContainer>
   );
