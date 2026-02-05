@@ -33,7 +33,8 @@ export function SolveHeader({
         ‹
       </Style.BackButton>
       <Style.HeaderTitle>
-        {problemName ?? (isLoading ? "문제를 불러오는 중..." : "문제 정보 없음")}
+        {problemName ??
+          (isLoading ? "문제를 불러오는 중..." : "문제 정보 없음")}
       </Style.HeaderTitle>
       <Style.HeaderActions>
         {rightContent}
@@ -43,7 +44,9 @@ export function SolveHeader({
           render={({ field }) => (
             <Style.LanguageSelect
               value={field.value}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onLanguageChange(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onLanguageChange(e.target.value)
+              }
             >
               {languageOptions.map((option) => (
                 <option key={option.value} value={option.value}>

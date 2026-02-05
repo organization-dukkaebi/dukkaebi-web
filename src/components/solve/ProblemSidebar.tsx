@@ -20,7 +20,8 @@ export const ProblemSidebar = forwardRef<HTMLDivElement, ProblemSidebarProps>(
         {showHeader && <Style.SidebarHeader>문제 목록</Style.SidebarHeader>}
         <Style.SidebarList>
           {problems.map((p, idx) => {
-            const active = String(p.problemId) === String(currentProblemId ?? "");
+            const active =
+              String(p.problemId) === String(currentProblemId ?? "");
             return (
               <Style.SidebarItem
                 key={p.problemId}
@@ -37,7 +38,7 @@ export const ProblemSidebar = forwardRef<HTMLDivElement, ProblemSidebarProps>(
         </Style.SidebarList>
       </Style.RightSidebar>
     );
-  }
+  },
 );
 
 ProblemSidebar.displayName = "ProblemSidebar";

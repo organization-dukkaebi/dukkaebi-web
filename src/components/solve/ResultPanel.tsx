@@ -44,13 +44,13 @@ export function ResultPanel({
           {activeTab === "result"
             ? terminalOutput
             : gradingDetails.length === 0
-            ? "테스트 케이스가 없습니다. 제출 후 다시 확인하세요."
-            : gradingDetails
-                .map(
-                  (d, i) =>
-                    `#${d.testCaseNumber ?? i + 1}: ${d.passed ? "통과" : "실패"}`
-                )
-                .join("\n")}
+              ? "테스트 케이스가 없습니다. 제출 후 다시 확인하세요."
+              : gradingDetails
+                  .map(
+                    (d, i) =>
+                      `#${d.testCaseNumber ?? i + 1}: ${d.passed ? "통과" : "실패"}`,
+                  )
+                  .join("\n")}
         </Style.TerminalOutput>
       </Style.Terminal>
 
