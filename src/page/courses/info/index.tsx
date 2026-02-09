@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "../../../components/header";
 import axiosInstance from "../../../api/axiosInstance";
-import * as S from "./styles";
+import * as S from "./style";
+import { IntroSection, ProblemsTable, SideCard } from "../../../components/courses/info";
 
 type ProblemStatus = "submitted" | "pending" | "failed";
 
@@ -207,99 +208,31 @@ const CourseDetailPage = () => {
       <Header />
 
       <S.Content>
-        <S.IntroSection>
-          <S.IntroContent>
-            <S.Title>{courseData.title}</S.Title>
-            <S.Description>{courseData.description}</S.Description>
-            <S.TagRow>
-              {courseData.tags.map((tag) => (
-                <S.Tag key={tag}>{tag}</S.Tag>
-              ))}
-            </S.TagRow>
-            {showProgress ? (
-              <S.ProgressContainer>
-                <S.ProgressBar>
-                  <S.ProgressFill style={{ width: `${progress}%` }} />
-                </S.ProgressBar>
-                <S.ProgressText>{progress}% 진행</S.ProgressText>
-              </S.ProgressContainer>
-            ) : (
-              <S.EnrollButton
-                type="button"
-                onClick={handleJoinCourse}
-                disabled={joinLoading}
-              >
-                {joinLoading ? "신청 중..." : "수강 신청"}
-              </S.EnrollButton>
-            )}
-          </S.IntroContent>
-        </S.IntroSection>
+        <IntroSection
+          courseData={courseData}
+          progress={progress}
+          showProgress={showProgress}
+          joinLoading={joinLoading}
+          handleJoinCourse={handleJoinCourse}
+        />
       </S.Content>
 
       <S.GraySection>
         <S.MainSection>
-          <S.TableCard>
-            <S.TableHeader>
-              <S.HeaderText>번호</S.HeaderText>
-              <S.HeaderText>제목</S.HeaderText>
-              <S.HeaderText align="right">제출 상태</S.HeaderText>
-            </S.TableHeader>
+          <ProblemsTable
+            loading={loading}
+            problems={courseData.problems}
+            showTableRows={showTableRows}
+            error={error}
+            handleProblemClick={handleProblemClick}
+          />
 
-            <S.TableBody>
-              {loading ? null : showTableRows ? (
-                courseData.problems.map((problem, index) => (
-                  <S.TableRow
-                    key={problem.id}
-                    $isLast={index === courseData.problems.length - 1}
-                    $clickable
-                    onClick={() => handleProblemClick(problem.id)}
-                  >
-                    <S.IndexCell>{index + 1}</S.IndexCell>
-                    <S.TitleCell>{problem.title}</S.TitleCell>
-                    <S.StatusCell status={problem.status}>
-                      {problem.status === "submitted"
-                        ? "제출 완료"
-                        : problem.status === "failed"
-                        ? "실패"
-                        : "미제출"}
-                    </S.StatusCell>
-                  </S.TableRow>
-                ))
-              ) : (
-                <S.TableRow $isLast>
-                  <S.IndexCell>--</S.IndexCell>
-                  <S.TitleCell>
-                    {error ?? "등록된 문제가 없습니다."}
-                  </S.TitleCell>
-                  <S.StatusCell status="pending">-</S.StatusCell>
-                </S.TableRow>
-              )}
-            </S.TableBody>
-          </S.TableCard>
-
-          <S.SideCard>
-            <S.SideCardTitle>{courseData.title}</S.SideCardTitle>
-            <S.SideCardList>
-              <S.SideCardItem>
-                <S.SideCardLabel>문제 :</S.SideCardLabel>
-                <S.SideCardValue>
-                  {courseData.summary.questionCount}
-                </S.SideCardValue>
-              </S.SideCardItem>
-              <S.SideCardItem>
-                <S.SideCardLabel>난이도 :</S.SideCardLabel>
-                <S.SideCardValue>{courseData.summary.level}</S.SideCardValue>
-              </S.SideCardItem>
-            </S.SideCardList>
-
-            <S.SideCardButton
-              type="button"
-              fullWidth
-              onClick={handleStartFirstProblem}
-            >
-              문제 풀어보기
-            </S.SideCardButton>
-          </S.SideCard>
+          <SideCard
+            title={courseData.title}
+            questionCount={courseData.summary.questionCount}
+            level={courseData.summary.level}
+            handleStartFirstProblem={handleStartFirstProblem}
+          />
         </S.MainSection>
       </S.GraySection>
     </S.Container>
