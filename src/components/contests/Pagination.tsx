@@ -1,4 +1,4 @@
-import * as S from "../../page/contests/style";
+import * as S from "../../page/contests/list/style";
 
 interface PaginationProps {
   currentPage: number;

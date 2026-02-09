@@ -1,4 +1,4 @@
-import * as S from "../../../page/contestsInfo/style";
+import * as S from "../../../page/contests/info/style";
 
 interface ContestInfoHeaderProps {
   contestImage: string;

@@ -1,14 +1,14 @@
 import * as S from "./style";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../../../api/axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Header } from "../../components/header";
+import { Header } from "../../../components/header";
 import { toast } from "react-toastify";
 import {
   ContestInfoHeader,
   ProblemsTable,
   ContestSideCard,
-} from "../../components/contests/info";
+} from "../../../components/contests/info";
 
 const DEFAULT_IMAGE = "https://i.ibb.co/Rp6GC0LG/dgsw.png";
 
