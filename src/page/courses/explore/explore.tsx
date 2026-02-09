@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../../components/header";
 import { Footer } from "../../../components/footer";
 import * as S from "./style";
-import SearchIcon from "../../../assets/image/problems/search.png";
+import { SearchBar, CourseCard, Pagination } from "../../../components/courses/explore";
 import axiosInstance from "../../../api/axiosInstance";
 
 interface CourseItem {
@@ -81,116 +81,26 @@ const CoursePage = () => {
       <Header />
 
       <S.Main>
-        <S.SearchBar>
-          <S.SearchInput
-            placeholder="대회 이름을 검색하세요..."
-            value={query}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setQuery(e.target.value);
-              handlePageChange(1);
-            }}
-          />
-          <S.SearchIcon aria-hidden>
-            <img src={SearchIcon} alt="검색" />
-          </S.SearchIcon>
-        </S.SearchBar>
+        <SearchBar
+          query={query}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setQuery(e.target.value);
+            handlePageChange(1);
+          }}
+        />
 
         <S.Grid>
           {loading
             ? Array.from({ length: 8 }).map((_, idx) => (
-                <S.Card key={`skeleton-${idx}`} style={{ opacity: 0.7 }}>
-                  <S.CardContent>
-                    <S.LevelBadge
-                      style={{
-                        background: "#f0f0f0",
-                        height: 14,
-                        width: "60%",
-                      }}
-                    />
-                    <S.CardTitle
-                      style={{
-                        background: "#f0f0f0",
-                        height: 18,
-                        width: "90%",
-                      }}
-                    />
-                    <S.KeywordContainer>
-                      {Array.from({ length: 2 }).map((__, k) => (
-                        <S.Keyword
-                          key={k}
-                          style={{
-                            background: "#f6f6f6",
-                            borderColor: "#f6f6f6",
-                          }}
-                        >
-                          &nbsp;
-                        </S.Keyword>
-                      ))}
-                    </S.KeywordContainer>
-                  </S.CardContent>
-                  <S.SolveButton
-                    style={{ background: "#e0e0e0", color: "#bdbdbd" }}
-                  >
-                    로딩 중…
-                  </S.SolveButton>
-                </S.Card>
+                <CourseCard key={`skeleton-${idx}`} loading />
               ))
             : pageItems.map((c) => (
-                <S.Card key={c.id}>
-                  <S.CardContent>
-                    <S.LevelBadge>난이도 : {c.level ?? "-"}</S.LevelBadge>
-                    <S.CardTitle>{c.title}</S.CardTitle>
-                    <S.KeywordContainer>
-                      {(c.keywords ?? []).length > 0 ? (
-                        (c.keywords ?? [])
-                          .slice(0, 4)
-                          .map((keyword, idx) => (
-                            <S.Keyword key={idx}>{keyword}</S.Keyword>
-                          ))
-                      ) : (
-                        <S.Keyword>{c.status ?? "참여 가능"}</S.Keyword>
-                      )}
-                    </S.KeywordContainer>
-                  </S.CardContent>
-                  <S.SolveButton onClick={() => navigate(`/courses/${c.id}`)}>
-                    코스 입장 →
-                  </S.SolveButton>
-                </S.Card>
+                <CourseCard key={c.id} course={c} onEnter={() => navigate(`/courses/${c.id}`)} />
               ))}
         </S.Grid>
 
         {filtered.length > 0 ? (
-          <S.PaginationWrapper>
-            <S.PaginationButton
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              style={{ fontSize: "30px", lineHeight: 0, color: "#BDBDBD" }}
-            >
-              ‹
-            </S.PaginationButton>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <S.PaginationButton
-                  key={pageNum}
-                  $active={currentPage === pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                >
-                  {pageNum}
-                </S.PaginationButton>
-              )
-            )}
-
-            <S.PaginationButton
-              onClick={() =>
-                handlePageChange(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-              style={{ fontSize: "30px", lineHeight: 0, color: "#BDBDBD" }}
-            >
-              ›
-            </S.PaginationButton>
-          </S.PaginationWrapper>
+          <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
         ) : null}
       </S.Main>
 

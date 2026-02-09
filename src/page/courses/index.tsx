@@ -12,6 +12,7 @@ import wisp from "../../assets/image/profile/dubi-rank/wisp.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
+import { ProfileSection, Tabs, CourseGrid, Pagination } from "../../components/courses";
 
 interface CourseItem {
   id: string;
@@ -287,86 +288,14 @@ export default function CoursesPage() {
       <S.Main>
         {/** 전체 흰색 박스 */}
         <S.TopSection>
-          {/* 프로필 영역 */}
-          <S.ProfileRow>
-            <S.Avatar
-              src={userInfo ? getAvatarImage(userInfo.growth) : copper}
-              alt="avatar"
-            />
+          <ProfileSection
+            userInfo={userInfo}
+            courseCounts={courseCounts}
+            getAvatarImage={getAvatarImage}
+            getGrowthStyle={getGrowthStyle}
+          />
 
-            <S.ProfileInfo>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <S.ProfileName>{userInfo?.nickname}</S.ProfileName>
-                {userInfo?.growth && (
-                  <S.ProfileTitle
-                    style={{
-                      color: getGrowthStyle(userInfo.growth).color,
-                    }}
-                  >
-                    ・ {getGrowthStyle(userInfo.growth).text}
-                  </S.ProfileTitle>
-                )}
-              </div>
-            </S.ProfileInfo>
-
-            <S.VerticalDivider />
-
-            <S.ProgressWrapper>
-              <S.ProgressLabel>
-                <div style={{ fontWeight: 700, color: "#1d1d1d" }}>
-                  나의 학습 진행도
-                </div>
-                <div style={{ color: "#bdbdbd", fontSize: 13 }}>
-                  현재 {courseCounts.total}개의 코스 중 {courseCounts.completed}
-                  개 코스 완료
-                </div>
-              </S.ProgressLabel>
-
-              <S.ProgressBarRow>
-                <S.ProgressBar>
-                  <S.ProgressFill
-                    $percent={
-                      courseCounts.total > 0
-                        ? Math.round(
-                            (courseCounts.completed / courseCounts.total) * 100,
-                          )
-                        : 0
-                    }
-                  />
-                </S.ProgressBar>
-                <S.ProgressPercentText>
-                  {courseCounts.total > 0
-                    ? Math.round(
-                        (courseCounts.completed / courseCounts.total) * 100,
-                      )
-                    : 0}
-                  % 진행
-                </S.ProgressPercentText>
-              </S.ProgressBarRow>
-            </S.ProgressWrapper>
-          </S.ProfileRow>
-
-          {/* 탭 영역 */}
-          <S.Tabs>
-            <S.TabItem
-              $active={activeTab === "inprogress"}
-              onClick={() => setActiveTab("inprogress")}
-            >
-              학습 중인 코스
-            </S.TabItem>
-            <S.TabItem
-              $active={activeTab === "completed"}
-              onClick={() => setActiveTab("completed")}
-            >
-              완료한 코스
-            </S.TabItem>
-            <S.TabItem
-              $active={false}
-              onClick={() => navigate("/courses/explore")}
-            >
-              코스 탐방 →
-            </S.TabItem>
-          </S.Tabs>
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} navigate={navigate} />
         </S.TopSection>
 
         <S.SectionTitle>
@@ -374,67 +303,13 @@ export default function CoursesPage() {
         </S.SectionTitle>
 
         {/* 코스 카드 목록 */}
-        <S.CourseGrid>
-          {loading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <S.CourseCard key={`ph-${i}`} style={{ opacity: 0.7 }}>
-                  <S.CourseDifficultyLabel
-                    style={{ background: "#f0f0f0", height: 16 }}
-                  />
-                  <S.CourseTitle
-                    style={{ background: "#f0f0f0", height: 18 }}
-                  />
-                  <S.CourseTagsWrapper>
-                    <S.CourseTagChip
-                      style={{ background: "#f6f6f6", height: 24 }}
-                    />
-                  </S.CourseTagsWrapper>
-                  <S.CourseProgressSection>
-                    <S.CourseProgressPercent
-                      style={{ background: "#f0f0f0", height: 12 }}
-                    />
-                    <S.CourseProgressBar>
-                      <S.CourseProgressFill $percent={0} />
-                    </S.CourseProgressBar>
-                  </S.CourseProgressSection>
-                </S.CourseCard>
-              ))
-            : (() => {
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const endIndex = startIndex + ITEMS_PER_PAGE;
-                const paginatedCourses = filteredCourses.slice(
-                  startIndex,
-                  endIndex,
-                );
-
-                return paginatedCourses.map((c: CourseItem) => (
-                  <S.CourseCard
-                    key={c.id}
-                    onClick={() => navigate(`/courses/${c.id}`)}
-                  >
-                    <S.CourseDifficultyLabel>
-                      난이도 : {c.level ?? "-"}
-                    </S.CourseDifficultyLabel>
-                    <S.CourseTitle>{c.title}</S.CourseTitle>
-
-                    <S.CourseTagsWrapper>
-                      {(c.tags ?? []).slice(0, 4).map((t: string) => (
-                        <S.CourseTagChip key={t}>#{t}</S.CourseTagChip>
-                      ))}
-                    </S.CourseTagsWrapper>
-
-                    <S.CourseProgressSection>
-                      <S.CourseProgressPercent>
-                        {c.progress ?? 0}%
-                      </S.CourseProgressPercent>
-                      <S.CourseProgressBar>
-                        <S.CourseProgressFill $percent={c.progress ?? 0} />
-                      </S.CourseProgressBar>
-                    </S.CourseProgressSection>
-                  </S.CourseCard>
-                ));
-              })()}
-        </S.CourseGrid>
+        <CourseGrid
+          loading={loading}
+          filteredCourses={filteredCourses}
+          currentPage={currentPage}
+          itemsPerPage={ITEMS_PER_PAGE}
+          navigate={navigate}
+        />
 
         {/* Pagination */}
         {!loading && filteredCourses.length === 0 ? (
@@ -442,35 +317,11 @@ export default function CoursesPage() {
             표시할 코스가 없습니다.
           </div>
         ) : filteredCourses.length > 0 ? (
-          <S.PaginationWrapper>
-            <S.PaginationButton
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              style={{ fontSize: "30px", lineHeight: 0, color: "#BDBDBD" }}
-            >
-              ‹
-            </S.PaginationButton>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <S.PaginationButton
-                key={page}
-                $active={currentPage === page}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </S.PaginationButton>
-            ))}
-
-            <S.PaginationButton
-              onClick={() =>
-                handlePageChange(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-              style={{ fontSize: "30px", lineHeight: 0, color: "#BDBDBD" }}
-            >
-              ›
-            </S.PaginationButton>
-          </S.PaginationWrapper>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+          />
         ) : null}
       </S.Main>
 
