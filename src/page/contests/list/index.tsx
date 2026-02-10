@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import { Header } from "../../components/header";
-import { Footer } from "../../components/footer";
-import axiosInstance from "../../api/axiosInstance";
+import { Header } from "../../../components/header";
+import { Footer } from "../../../components/footer";
+import axiosInstance from "../../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 import {
@@ -9,7 +9,7 @@ import {
   SearchBar,
   ContestsGrid,
   Pagination,
-} from "../../components/contests";
+} from "../../../components/contests";
 
 interface Contest {
   code: string;
@@ -18,6 +18,15 @@ interface Contest {
   participantCount: number;
   status: "JOINABLE" | "JOINED" | "ENDED";
   image: string;
+}
+
+interface ContestAPIResponse {
+  code: string;
+  title: string;
+  dDay: string;
+  participantCount: number;
+  status: "JOINABLE" | "JOINED" | "ENDED";
+  imageUrl?: string;
 }
 
 const DEFAULT_IMAGE = "https://i.ibb.co/Rp6GC0LG/dgsw.png";
@@ -53,7 +62,7 @@ const ContestPage = () => {
         const data = res.data;
 
         if (data && Array.isArray(data.content)) {
-          const mappedContests = data.content.map((c: any) => ({
+          const mappedContests = data.content.map((c: ContestAPIResponse) => ({
             code: c.code,
             title: c.title,
             dDay: c.dDay,
