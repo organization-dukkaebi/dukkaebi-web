@@ -1,12 +1,11 @@
-//todo : api 연결(서버 반환 방식에 따라 공지사항 이미지 표시 방법 반영)
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
 import { Header } from "../../../components/header";
 import { Footer } from "../../../components/footer";
-import * as S from "./style";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../../api/axiosInstance";
-// TODO: Uncomment when API is ready
-// import axiosInstance from "../../../api/axiosInstance";
+import { NoticeHeader, NoticeContent, ActionBar } from "../../../components/notifications/info";
+import * as S from "./style";
 
 interface NoticeDetail {
   title: string;
@@ -82,33 +81,18 @@ export default function NoticeInfoPage() {
 
       <S.Main>
         <S.Container>
-          {/* Notice Header */}
-          <S.NoticeHeader>
-            <S.Title>{notice.title}</S.Title>
-            <S.MetaInfo>
-              <S.MetaItem>
-                <S.MetaLabel>작성자</S.MetaLabel>
-                <S.MetaValue>{notice.writer}</S.MetaValue>
-              </S.MetaItem>
-              <S.MetaItem>
-                <S.MetaLabel>등록일</S.MetaLabel>
-                <S.MetaValue>{notice.createdAt}</S.MetaValue>
-              </S.MetaItem>
-            </S.MetaInfo>
-          </S.NoticeHeader>
+          <NoticeHeader 
+            title={notice.title}
+            writer={notice.writer}
+            createdAt={notice.createdAt}
+          />
 
-          {/* Notice Content */}
-          <S.NoticeContent>
-            <S.ContentText>{notice.content}</S.ContentText>
-            {notice.fileUrl && (
-              <S.AttachmentImage src={notice.fileUrl} alt="첨부 파일" />
-            )}
-          </S.NoticeContent>
+          <NoticeContent 
+            content={notice.content}
+            fileUrl={notice.fileUrl}
+          />
 
-          {/* Navigation Buttons */}
-          <S.ActionBar>
-            <S.ListButton onClick={handleBack}>목록으로</S.ListButton>
-          </S.ActionBar>
+          <ActionBar onBackToList={handleBack} />
         </S.Container>
       </S.Main>
 
