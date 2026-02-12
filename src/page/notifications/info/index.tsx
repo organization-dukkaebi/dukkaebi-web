@@ -101,7 +101,7 @@ export default function NoticeInfoPage() {
           <S.NoticeContent>
             <S.ContentText>{notice.content}</S.ContentText>
             {notice.fileUrl && (
-              <S.AttachmentImage src={notice.fileUrl} alt="첨부 파일" />
+              <S.AttachmentImage src={notice.fileUrl} alt="" />
             )}
           </S.NoticeContent>
 
