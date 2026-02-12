@@ -12,7 +12,7 @@ import CoursesPage from "../page/courses";
 import CoursesExplorePage from "../page/courses/explore/explore";
 import CourseDetailPage from "../page/courses/info";
 import ContestSolvePage from "../page/solve/contests";
-import NoticesPage from "../page/notifications";
+import NoticesPage from "../page/notifications/list";
 import NoticeInfoPage from "../page/notifications/info";
 
 export default function AppRoutes() {

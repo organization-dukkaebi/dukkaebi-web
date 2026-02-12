@@ -24,7 +24,6 @@ export const Container = styled.div`
   gap: 40px;
 `;
 
-/* Back Button */
 export const BackButton = styled.button`
   display: flex;
   align-items: center;
@@ -88,7 +87,6 @@ export const MetaValue = styled.span`
   font-weight: 500;
 `;
 
-/* Notice Content */
 export const NoticeContent = styled.div`
   min-height: 330px;
 `;
