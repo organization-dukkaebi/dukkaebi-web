@@ -1,38 +1,43 @@
 import styled from "styled-components";
 
+/* Layout */
 export const Page = styled.div`
-  background: linear-gradient(180deg, #e9e6fe 40%, #ffffff 70%);
   min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Main = styled.main`
-  padding: 5rem 12.5rem;
-  max-width: 80rem;
+  flex: 1;
+  max-width: 1280px;
   margin: 0 auto;
-  min-height: calc(100vh - 3.75rem);
+  padding: 60px;
 `;
 
 export const Container = styled.div`
+  width: 794px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 40px;
 `;
 
+/* Search */
 export const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+  padding: 12px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 
   input {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 1rem;
-    color: #1f2937;
+
+    font-size: 14px;
+    color: #111827;
 
     &::placeholder {
       color: #9ca3af;
@@ -40,143 +45,86 @@ export const SearchBar = styled.div`
   }
 
   img {
-    width: 1.25rem;
-    height: 1.25rem;
     cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-
-    &:hover {
-      opacity: 1;
-    }
   }
 `;
 
+/* Table */
 export const NoticeTable = styled.div`
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  width: 100%;
 `;
 
 export const TableHeader = styled.div`
   display: grid;
-  grid-template-columns: 0.8fr 3fr 1fr 1.2fr 0.8fr;
-  padding: 1rem 1.5rem;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.875rem;
-
-  span {
-    text-align: center;
-
-    &:nth-child(2) {
-      text-align: left;
-    }
-  }
+  grid-template-columns: 80px 1fr 120px 140px 80px;
+  padding: 16px 20px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #6b7280;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 `;
 
-interface TableRowProps {
-  isLast: boolean;
-}
-
-export const TableRow = styled.div<TableRowProps>`
+export const TableRow = styled.div<{ isLast?: boolean }>`
   display: grid;
-  grid-template-columns: 0.8fr 3fr 1fr 1.2fr 0.8fr;
-  padding: 1rem 1.5rem;
-  border-bottom: ${(props) => (props.isLast ? "none" : "1px solid #f3f4f6")};
+  grid-template-columns: 80px 1fr 120px 140px 80px;
+  padding: 16px 20px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
   cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: 0.875rem;
-  color: #1f2937;
 
-  &:hover {
-    background-color: #f9fafb;
-  }
-
-  span {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:nth-child(2) {
-      text-align: left;
-      justify-content: flex-start;
-      font-weight: 500;
-    }
-  }
+  ${({ isLast }) =>
+    isLast &&
+    `
+    border-radius: 0 0 8px 8px;
+  `}
 `;
 
+export const Left = styled.div`
+  display: flex;
+  gap: 40px;
+`;
+
+export const Right = styled.div`
+  display: flex;
+  gap: 80px;
+`;
+
+/* Pagination */
 export const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
 `;
 
 export const Pagination = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 20px;
 `;
 
-interface ArrowButtonProps {
-  direction: "left" | "right";
-}
-
-export const ArrowButton = styled.button<ArrowButtonProps>`
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  width: 2rem;
-  height: 2rem;
+export const ArrowButton = styled.button<{ direction: "left" | "right" }>`
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover:not(:disabled) {
-    background: #f9fafb;
-    border-color: #d1d5db;
-  }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-
-  img {
-    width: 0.75rem;
-    height: 0.75rem;
-  }
 `;
 
 export const Pages = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 12px;
 `;
 
-interface PageButtonProps {
-  active: boolean;
-}
-
-export const PageButton = styled.button<PageButtonProps>`
-  background: ${(props) => (props.active ? "#7c3aed" : "white")};
-  color: ${(props) => (props.active ? "white" : "#6b7280")};
-  border: 1px solid ${(props) => (props.active ? "#7c3aed" : "#e5e7eb")};
-  border-radius: 0.375rem;
-  width: 2rem;
-  height: 2rem;
-  font-size: 0.875rem;
-  font-weight: ${(props) => (props.active ? "600" : "400")};
+export const PageButton = styled.button<{ active?: boolean }>`
+  background: none;
+  border: none;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: ${(props) => (props.active ? "#6d28d9" : "#f9fafb")};
-    border-color: ${(props) => (props.active ? "#6d28d9" : "#d1d5db")};
-  }
+  color: ${({ active }) => (active ? "#4b5563" : "#9ca3af")};
+  font-weight: ${({ active }) => (active ? 500 : 400)};
 `;

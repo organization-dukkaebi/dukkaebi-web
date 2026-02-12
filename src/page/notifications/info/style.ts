@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+/* Layout */
 export const Page = styled.div`
   min-height: 100vh;
   background: #fff;
@@ -45,6 +46,7 @@ export const BackButton = styled.button`
   }
 `;
 
+/* Notice Header */
 export const NoticeHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,6 +123,8 @@ export const AttachmentImage = styled.img`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
+/* Navigation Buttons */
+/* Action Bar */
 export const ActionBar = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -132,12 +136,13 @@ export const ActionBar = styled.div`
   border-top: 1px solid #ededed;
 `;
 
-
+/* Left button group */
 export const LeftActions = styled.div`
   display: flex;
   gap: 12px;
 `;
 
+/* 공지 삭제 */
 export const DeleteButton = styled.button`
   display: flex;
   padding: 12px 24px;
