@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import * as S from "./styles";
-import dubiImage from "../../assets/image/main/dubi.png";
-import fireIcon from "../../assets/image/main/solar_fire-bold-duotone.svg";
 import { Header } from "../../components/header";
 import { Footer } from "../../components/footer";
+import { HeroSection, StatsCard, NoticeSection } from "../../components/main";
 import axiosInstance from "../../api/axiosInstance";
-import NoticeCard from "../../components/main/noticeCard";
 import { useNavigate } from "react-router-dom";
 
 type ContributionsResponse = Record<string, number>;
@@ -38,13 +36,23 @@ const formatDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+/**
+ * 푼 문제 수를 히트맵 색상 강도로 변환
+ * @param {number} solved - 푼 문제 수
+ * @returns {string} 강도 값 ("0", "20", "60", "100")
+ */
 const mapSolvedToIntensity = (solved: number): string => {
-  if (solved >= 3) return "100";
-  if (solved >= 2) return "60";
-  if (solved >= 1) return "20";
-  return "0";
+  if (solved >= 3) return "100"; // 3문제 이상: 가장 진한 색
+  if (solved >= 2) return "60";  // 2문제: 중간 색
+  if (solved >= 1) return "20";  // 1문제: 연한 색
+  return "0";                    // 0문제: 회색
 };
 
+/**
+ * 히트맵 데이터 생성 함수
+ * @param {ContributionsResponse} contributions - 날짜별 문제 풀이 수 데이터
+ * @returns {HeatmapCellData[]} 17주간의 히트맵 셀 데이터 배열
+ */
 const generateHeatmapData = (
   contributions: ContributionsResponse = {},
 ): HeatmapCellData[] => {
@@ -121,10 +129,9 @@ const Main = () => {
               },
             ),
             axiosInstance.get<StreakResponse>("/user/activity/streak"),
-            axiosInstance.get<{ content: Notice[] }>("/notice/home"), // 공지사항 API 추가
+            axiosInstance.get<{ content: Notice[] }>("/notice/home"),
           ]);
 
-        // 데이터 파싱 로직 (기존 유지)
         const contributionsData =
           (contributionsResponse.data as any)?.data ||
           contributionsResponse.data ||
@@ -137,7 +144,6 @@ const Main = () => {
           typeof streakData?.streak === "number" ? streakData.streak : 0,
         );
 
-        // 공지사항 데이터 세팅 (최대 5개)
         const noticeData =
           (noticeResponse.data as any)?.content || noticeResponse.data || [];
         setNotices(noticeData.slice(0, 5));
@@ -156,92 +162,16 @@ const Main = () => {
 
   return (
     <S.PageWrapper>
-      {/* Header */}
-
       <Header />
 
-      {/* Main Content */}
       <S.MainContent>
-        {/* Hero Section */}
         <S.HeroSection>
-          <S.HeroCard>
-            <S.HeroText>
-              <S.HeroTitle>
-                하루 한 문제로
-                <br />
-                어제보다 성장한 당신을 만들어드립니다
-              </S.HeroTitle>
-              <S.HeroSubtitle>
-                AI가 문제 풀이를 분석해 당신의 약점을 찾아드리고, 맞춤 학습
-                경로를 제안합니다.
-                <br />
-                단순한 문제풀이를 넘어, 실력을 완성하는 여정을 함께하세요.
-              </S.HeroSubtitle>
-            </S.HeroText>
-            <S.DubiImage src={dubiImage} alt="Dubi Character" />
-          </S.HeroCard>
+          <HeroSection />
 
-          {/* Stats Card */}
-          <S.StatsCard>
-            <S.StreakInfo>
-              <S.StreakContent>
-                <S.StreakIcon>
-                  <img
-                    src={fireIcon}
-                    alt="Fire"
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </S.StreakIcon>
-                <S.StreakText>
-                  <S.StreakLabel>연속 학습일</S.StreakLabel>
-                  <S.StreakValue>{streak}일</S.StreakValue>
-                </S.StreakText>
-              </S.StreakContent>
-              <S.Divider />
-            </S.StreakInfo>
-
-            <S.HeatmapSection>
-              <S.DayLabels>
-                <S.DayLabel>M</S.DayLabel>
-                <S.DayLabel>T</S.DayLabel>
-                <S.DayLabel>S</S.DayLabel>
-              </S.DayLabels>
-
-              <S.HeatmapGrid>
-                {heatmapData.map((cell) => (
-                  <S.HeatmapCell
-                    key={cell.date}
-                    $intensity={cell.intensity}
-                    data-tooltip={`${cell.date} · ${cell.solved} 문제`}
-                    aria-label={`${cell.date} · ${cell.solved} 문제`}
-                    title={`${cell.date} · ${cell.solved} 문제`}
-                  />
-                ))}
-              </S.HeatmapGrid>
-            </S.HeatmapSection>
-          </S.StatsCard>
+          <StatsCard streak={streak} heatmapData={heatmapData} />
         </S.HeroSection>
 
-        <S.NoticeSection>
-          <S.NoticeTitleGroup>
-            <span style={{ fontSize: "18px", fontWeight: "bold" }}>
-              최근 공지사항
-            </span>
-          </S.NoticeTitleGroup>
-          <S.NoticeList>
-            {notices.map((notice) => (
-              <NoticeCard
-                key={notice.noticeId}
-                title={notice.title}
-                author={notice.writer}
-                date={notice.date} // 날짜만 표시
-                content={notice.content}
-                fileUrl={notice.fileUrl}
-                onClick={() => handleNoticeClick(notice.noticeId)}
-              />
-            ))}
-          </S.NoticeList>
-        </S.NoticeSection>
+        <NoticeSection notices={notices} onNoticeClick={handleNoticeClick} />
       </S.MainContent>
 
       <Footer />
