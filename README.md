@@ -1,20 +1,69 @@
-## 기술스택
+<div id="top"></div>
 
----
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+    <img src="./docs/images/logo.svg" alt="Logo" width="80" height="80">
 
-기본 : react, react-dom, typescript, react-router-dom
+  <h3 align="center">DUKKAEBI</h3>
 
-api : @tanstack/react-query, axios, event-source-polyfill
-(대회 문제 풀기 화면에서 남은 시간 확인시에 사용)
+  <p align="center">
+    알고리즘 대회 및 문제 저지 서비스
+  </p>
 
-styling : styled-components, css
+</div>
+<br />
 
-editor : monaco-editor, @monaco-editor/react
+코딩테스트 대회를 진행하기 위해 학교와 소통하며 개발된 알고리즘 문제 풀이 및 대회 저지 서비스입니다.
+문제 풀이, 강의(코스), 대회 세 가지 콘텐츠를 하나의 채점 환경에서 다룰 수 있도록 구성되어 있습니다.
 
-## readme 파일
+<br>
 
----
+## 화면
 
-- 클로드 init 으로 만든 설명 파일, ai 한테 넣고 프로젝트 구조 질문해도 가능할것 같음 (학생화면 기준임
-  [관리자 페이지는 포함되어 있지 않음])
-  [전채내용](init-all.md) | [요약본](init-summary.md)
+### 문제 해결 화면
+
+Monaco Editor 기반 코드 에디터와 문제 설명이 좌우로 배치되어 있고, 실행/제출 결과를 하단 패널에서 확인할 수 있습니다.
+
+### 프로필 화면
+
+티어(캐릭터 랭크), 점수, 연속 학습일, 학습 활동 히트맵으로 학습 현황을 확인할 수 있습니다.
+
+<br>
+
+## 기술 스택
+
+| 구분            | 기술              |
+| --------------- | ----------------- |
+| 언어/프레임워크 | TypeScript, React |
+| 스타일링        | Styled-components |
+| 코드 에디터     | Monaco Editor     |
+| API 통신        | Axios             |
+
+<br>
+
+<br>
+
+## 기능
+
+### 1. 메인
+
+공지사항 섹션과 통계 카드(StatsCard) 등으로 서비스 현황이 메인 화면에 노출됩니다.
+
+### 2. 문제 풀이 (`problems`)
+
+검색·필터·페이지네이션이 적용된 문제 목록과, 문제별 난이도(구리/은/금/철/옥 등)를 아이콘으로 구분해 보여주는 구조로 되어 있습니다.
+
+### 3. 코스 (`courses`)
+
+강의 형태로 문제를 묶어 제공하는 영역입니다. 코스 탐색(explore) 페이지에서 검색·카드 그리드로 코스를 찾고, 코스 상세(info) 페이지에서 소개, 포함된 문제 목록, 진행 현황을 확인할 수 있도록 구성되어 있습니다.
+
+### 4. 대회 (`contests`)
+
+대회 목록은 히어로 배너와 카드 그리드로 노출되고, 대회 상세 페이지에서는 대회 정보와 출제 문제 목록을 확인할 수 있습니다.
+
+### 5. 문제 풀이 공통 환경 (`hooks/solve`)
+
+문제/코스/대회 세 가지 콘텐츠가 `useProblem`, `useCourse`, `useContest`, `useGrading`, `useSolveForm`, `useResizePanel` 훅을 공유하는 하나의 풀이 환경으로 통합되어 있습니다. 좌우 리사이즈 가능한 패널에 코드 에디터와 문제 설명이 배치되고, 채점 결과가 별도 패널로 표시됩니다.
+
+<br>

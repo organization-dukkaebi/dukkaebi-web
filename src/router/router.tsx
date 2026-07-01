@@ -4,7 +4,7 @@ import Signup from "../page/signup";
 import Main from "../page/main";
 import ContestDetailPage from "../page/contests/info";
 import ContestPage from "../page/contests/list";
-import Profile from "../page/profile";
+import Profile from "../page/profile/index";
 import SolvePage from "../page/solve/problems";
 import CourseSolvePage from "../page/solve/course";
 import Problems from "../page/problems";
